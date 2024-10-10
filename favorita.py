@@ -391,7 +391,7 @@ for n_features in range(5, 21):
 
 X_train, X_val, y_train, y_val = train_test_split(X_selected, y, test_size=0.2, random_state=42)
 
-# רשימת שיטות הנרמול
+
 scalers = {
     'StandardScaler': StandardScaler(),
     'MinMaxScaler': MinMaxScaler(),
@@ -399,52 +399,41 @@ scalers = {
     'QuantileTransformer': QuantileTransformer(output_distribution='normal')
 }
 
-# רשימת התוצאות
 results = []
 
 for name, scaler in scalers.items():
     print(f"\nRunning with {name}...")
 
-    # נרמול הנתונים
     X_train_scaled = scaler.fit_transform(X_train)
     X_val_scaled = scaler.transform(X_val)
 
-    # אימון המודל (לדוגמה, RandomForestRegressor)
     model = RandomForestRegressor(n_estimators=20, max_depth=30, random_state=42)
     model.fit(X_train_scaled, y_train)
 
-    # חיזוי והערכת הביצועים
     y_pred = model.predict(X_val_scaled)
     rmse = mean_squared_error(y_val, y_pred, squared=False)
 
-    # שמירת התוצאות
     results.append((name, rmse))
     print(f"{name} RMSE: {rmse}")
 
-# הצגת התוצאות
 for name, rmse in results:
     print(f"{name}: {rmse}")
 
 features = train_encoded.columns.difference(['sales', 'id'], sort=False)
 
-# פונקציה לנרמול הנתונים
 def normalize_data(train_encoded, test_encoded):
-    # הסרת עמודות 'sales' ב-train (אם קיימת) ו-'id' ב-test
     X = train_encoded[features]
     y = train_encoded['sales']
     test_features = test_encoded[features]
 
-    # נרמול הנתונים
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     test_scaled = scaler.transform(test_features)
 
     return X_scaled, y, test_scaled
 
-# קריאה לפונקציה
 X_train_scaled, y_train, test_scaled = normalize_data(train_encoded, test_encoded)
 
-# חלוקת הנתונים לסט אימון וסט בדיקה
 X_train, X_val, y_train, y_val = train_test_split(X_train_scaled, y_train, test_size=0.2, random_state=42)
 
 """# **Dimention reduction**
@@ -452,18 +441,16 @@ X_train, X_val, y_train, y_val = train_test_split(X_train_scaled, y_train, test_
 PCA
 """
 
-pca = PCA(n_components=0.95)  # שומר על 95% מהשונות בנתונים
+pca = PCA(n_components=0.95)  
 X_train_pca = pca.fit_transform(X_train)
 X_val_pca = pca.transform(X_val)
 test_pca = pca.transform(test_scaled)
 
-# בדיקת כמה ממדים נשמרו אחרי PCA
 print(f"Number of components after PCA: {X_train_pca.shape[1]}")
 
 model_rf = RandomForestRegressor(n_estimators=20, max_depth=30, random_state=42)
 model_rf.fit(X_train_pca, y_train)
 
-# חיזוי והערכת המודל
 y_pred_pca = model_rf.predict(X_val_pca)
 rmse_pca = mean_squared_error(y_val, y_pred_pca, squared=False)
 print(f"RMSE after PCA: {rmse_pca}")
@@ -528,7 +515,7 @@ for n in range(2, 6):  # מצמצם את טווח החיפוש
 
 print(results_df)
 
-tsne = TSNE(n_components=2, random_state=42)  # צמצום ל-2 ממדים לצורך ויזואליזציה
+tsne = TSNE(n_components=2, random_state=42)  
 
 X_train_tsne = tsne.fit_transform(X_train)
 X_val_tsne = tsne.transform(X_val)

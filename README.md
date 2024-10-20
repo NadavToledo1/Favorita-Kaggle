@@ -1,5 +1,5 @@
-Corporación Favorita Store Sales Forecasting
-Overview
+### **Corporación Favorita Store Sales Forecasting**
+**Overview**
 This project tackles the Corporación Favorita Store Sales challenge from Kaggle, aiming to predict sales for different stores and product families using historical sales data, transactions, oil prices, and holidays information. Time-series forecasting techniques are employed to handle the complex relationships between time, store-specific factors, and sales patterns.
 
 Table of Contents
